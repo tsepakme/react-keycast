@@ -1,0 +1,8 @@
+# Git ignore file
+node_modules
+dist/
+.DS_Store
+.env
+.vscode
+.idea
+coverage/

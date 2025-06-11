@@ -1,0 +1,59 @@
+{
+  "name": "react-keystroke",
+  "version": "0.0.1",
+  "description": "React component for visualizing keyboard input on screen. Useful for demo recordings, presentations, and tutorials.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "prepublishOnly": "npm run build",
+    "publish:patch": "npm version patch && git push && git push --tags && npm publish",
+    "publish:minor": "npm version minor && git push && git push --tags && npm publish",
+    "publish:major": "npm version major && git push && git push --tags && npm publish"
+  },
+  "keywords": [
+    "keyboard",
+    "overlay",
+    "react",
+    "hotkeys"
+  ],
+  "author": "Aiusha Mikhailov",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "use-hotkeys-ts": "^1.1.2"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^29.5.14",
+    "@types/jsdom": "^21.1.7",
+    "@types/react": "^19.1.7",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.5.2",
+    "@vitest/ui": "^3.2.3",
+    "jsdom": "^26.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tsepakme/react-keystroke"
+  }
+}
