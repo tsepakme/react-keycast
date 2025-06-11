@@ -1,6 +1,6 @@
 {
   "name": "react-keystroke",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React component for visualizing keyboard input on screen. Useful for demo recordings, presentations, and tutorials.",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
