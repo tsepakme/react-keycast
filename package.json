@@ -1,6 +1,6 @@
 {
   "name": "react-keycast",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "React component for visualizing keyboard input on screen. Useful for demo recordings, presentations, and tutorials.",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
