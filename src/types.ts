@@ -1,4 +1,4 @@
-export interface PressedKey {
+export type PressedKey = {
   key: string;
   modifiers: {
     shift: boolean;
@@ -8,4 +8,16 @@ export interface PressedKey {
   };
   timestamp: number;
   id: string;
+}
+
+import { FC, CSSProperties } from "react";
+
+export interface KeyOverlayProps {
+  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
+  style?: CSSProperties;
+  keyStyle?: CSSProperties;
+  maxKeys?: number;
+  timeout?: number;
+  filterKeys?: (key: string) => boolean;
+  className?: string;
 }

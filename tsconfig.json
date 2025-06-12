@@ -9,9 +9,11 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
+    "emitDeclarationOnly": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "dist",
+    "declarationDir": "./dist",
+    "outDir": "./dist",
     "strict": true,
     "allowSyntheticDefaultImports": true
   },

@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { PressedKey } from '../types';
 
 interface Props {
   keyData: PressedKey;
+  style?: CSSProperties;
 }
 
-export const KeyItem: React.FC<Props> = ({ keyData }) => {
+export const KeyItem: React.FC<Props> = ({ keyData, style = {} }) => {
   const { key, modifiers } = keyData;
 
   const modKeys = [
@@ -19,5 +20,5 @@ export const KeyItem: React.FC<Props> = ({ keyData }) => {
 
   const label = modKeys ? `${modKeys} + ${key}` : key;
 
-  return <div className="key-item">{label}</div>;
+  return <div className="key-item" style={style}>{label}</div>;
 };
