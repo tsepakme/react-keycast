@@ -13,11 +13,13 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --dts --format esm,cjs",
+    "build": "tsup src/index.ts --format esm,cjs",
+    "types": "tsc --declaration --emitDeclarationOnly",
+    "build:all": "npm run build && npm run types",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run build:all",
     "publish:patch": "npm version patch && git push && git push --tags && npm publish",
     "publish:minor": "npm version minor && git push && git push --tags && npm publish",
     "publish:major": "npm version major && git push && git push --tags && npm publish"

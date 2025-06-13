@@ -1,3 +1,5 @@
+import { FC, CSSProperties } from "react";
+
 export type PressedKey = {
   key: string;
   modifiers: {
@@ -9,8 +11,6 @@ export type PressedKey = {
   timestamp: number;
   id: string;
 }
-
-import { FC, CSSProperties } from "react";
 
 export interface KeyOverlayProps {
   position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';

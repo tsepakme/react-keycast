@@ -1,0 +1,1 @@
+{"version":3,"file":"useKeyPresses.d.ts","sourceRoot":"","sources":["../../src/hooks/useKeyPresses.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,UAAU,EAAE,MAAM,UAAU,CAAC;AAKtC,UAAU,iBAAiB;IACzB,OAAO,CAAC,EAAE,MAAM,CAAC;IACjB,QAAQ,CAAC,EAAE,MAAM,CAAC;CACnB;AAED,wBAAgB,aAAa,CAAC,OAAO,GAAE,iBAAsB,gBAkD5D"}
