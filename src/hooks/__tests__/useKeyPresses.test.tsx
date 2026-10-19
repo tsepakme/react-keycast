@@ -21,7 +21,7 @@ describe('useKeyPresses', () => {
     const { result } = renderHook(() => useKeyPresses());
 
     act(() => {
-      window.dispatchEvent(
+      document.dispatchEvent(
         new KeyboardEvent('keydown', {
           key: 'k',
           ctrlKey: true,
@@ -40,7 +40,7 @@ describe('useKeyPresses', () => {
     const { result } = renderHook(() => useKeyPresses());
 
     act(() => {
-      window.dispatchEvent(
+      document.dispatchEvent(
         new KeyboardEvent('keydown', {
           key: 'a',
           ctrlKey: false,
@@ -51,7 +51,7 @@ describe('useKeyPresses', () => {
     });
 
     act(() => {
-      window.dispatchEvent(
+      document.dispatchEvent(
         new KeyboardEvent('keydown', {
           key: 'b',
           ctrlKey: false,
@@ -72,7 +72,7 @@ describe('useKeyPresses', () => {
     const { result } = renderHook(() => useKeyPresses({ timeout: 1000 }));
 
     act(() => {
-      window.dispatchEvent(
+      document.dispatchEvent(
         new KeyboardEvent('keydown', {
           key: 'k',
           ctrlKey: true,
@@ -93,9 +93,9 @@ describe('useKeyPresses', () => {
     const { result } = renderHook(() => useKeyPresses({ maxItems: 2 }));
 
     act(() => {
-      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
-      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'b' }));
-      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'c' }));
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'b' }));
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'c' }));
     });
 
     expect(result.current.length).toBe(2);
@@ -130,7 +130,7 @@ describe('useKeyPresses', () => {
     const { result } = renderHook(() => useKeyPresses());
 
     act(() => {
-      window.dispatchEvent(
+      document.dispatchEvent(
         new KeyboardEvent('keydown', {
           key: 'Enter',
           ctrlKey: false,

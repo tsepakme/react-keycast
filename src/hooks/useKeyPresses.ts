@@ -22,16 +22,6 @@ export function useKeyPresses(options: KeyPressesOptions = {}) {
   };
 
   useHotkeys("*", (e: KeyboardEvent) => {
-    const target = e.target as HTMLElement;
-    if (
-      target &&
-      (target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable)
-    ) {
-      return;
-    }
-
     const newKey: PressedKey = {
       key: e.key,
       modifiers: {

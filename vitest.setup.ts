@@ -1,6 +1,5 @@
 import "@testing-library/jest-dom";
 import { vi } from "vitest";
-import { useEffect } from 'react';
 
 if (!global.crypto) {
   global.crypto = {} as any;
@@ -43,20 +42,3 @@ if (!document.createRange) {
     return range;
   };
 }
-
-vi.mock('use-hotkeys-ts', () => {
-  return {
-    useHotkeys: (keys: string, callback: (e: KeyboardEvent) => void) => {
-      useEffect(() => {
-        const handler = (e: KeyboardEvent) => callback(e);
-        window.addEventListener('keydown', handler);
-        
-        return () => {
-          window.removeEventListener('keydown', handler);
-        };
-      }, [callback]);
-      
-      return;
-    }
-  };
-});

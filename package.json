@@ -34,7 +34,7 @@
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {
-    "use-hotkeys-ts": "^1.1.2"
+    "use-hotkeys-ts": "^1.1.8"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",
@@ -53,8 +53,8 @@
     "vitest": "^3.2.3"
   },
   "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
   },
   "repository": {
     "type": "git",
