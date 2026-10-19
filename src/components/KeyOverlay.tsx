@@ -34,7 +34,11 @@ export const KeyOverlay: React.FC<KeyOverlayProps> = ({
       style={{ ...positionStyles[position], ...style }}
     >
       {filteredKeys.map((keyData) => (
-        <KeyItem key={keyData.id} keyData={keyData} style={keyStyle} />
+        <KeyItem
+          key={keyData.id}
+          keyData={keyData}
+          style={{ animationDuration: `${timeout}ms`, ...keyStyle }}
+        />
       ))}
     </div>
   );

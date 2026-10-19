@@ -7,4 +7,5 @@ export default defineConfig({
   outDir: "dist",
   clean: true,
   treeshake: true,
+  external: ["react", "react-dom", "react/jsx-runtime"],
 });
