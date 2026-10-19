@@ -3,14 +3,24 @@
   "version": "1.0.4",
   "description": "React component for visualizing keyboard input on screen. Useful for demo recordings, presentations, and tutorials.",
   "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "style": "./dist/index.css",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.js"
-    }
+    },
+    "./style.css": "./dist/index.css"
   },
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs",
@@ -34,23 +44,25 @@
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {
-    "use-hotkeys-ts": "^1.1.8"
+    "use-hotkeys-ts": "^1.2.2"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.6.1",
-    "@types/jest": "^29.5.14",
+    "@types/jest": "^30.0.0",
     "@types/jsdom": "^21.1.7",
     "@types/react": "^19.1.7",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.5.2",
-    "@vitest/ui": "^3.2.3",
+    "@vitest/ui": "^4.1.12",
     "jsdom": "^26.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "tsup": "^8.0.0",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.3"
+    "vitest": "^4.1.12"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
