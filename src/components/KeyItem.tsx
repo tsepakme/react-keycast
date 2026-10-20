@@ -18,11 +18,12 @@ export const KeyItem: React.FC<Props> = ({ keyData, style = {} }) => {
     ' ': 'Space',
   };
   const keyLabel = keyLabels[normalizedKey] ?? key;
+  const isPrintableCharacter = key.length === 1 && key !== ' ';
 
   const modKeys = [
     modifiers.ctrl && normalizedKey !== 'control' && 'Ctrl',
     modifiers.alt && normalizedKey !== 'alt' && 'Alt',
-    modifiers.shift && normalizedKey !== 'shift' && 'Shift',
+    modifiers.shift && normalizedKey !== 'shift' && !isPrintableCharacter && 'Shift',
     modifiers.meta && normalizedKey !== 'meta' && 'Meta',
   ]
     .filter(Boolean)
