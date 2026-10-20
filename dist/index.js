@@ -88,11 +88,11 @@ var KeyItem = ({ keyData, style = {} }) => {
     " ": "Space"
   };
   const keyLabel = (_a = keyLabels[normalizedKey]) != null ? _a : key;
-  const isPrintableCharacter = key.length === 1 && key !== " ";
+  const isShiftProducedSymbol = key.length === 1 && /[\p{P}\p{S}]/u.test(key);
   const modKeys = [
     modifiers.ctrl && normalizedKey !== "control" && "Ctrl",
     modifiers.alt && normalizedKey !== "alt" && "Alt",
-    modifiers.shift && normalizedKey !== "shift" && !isPrintableCharacter && "Shift",
+    modifiers.shift && normalizedKey !== "shift" && !isShiftProducedSymbol && "Shift",
     modifiers.meta && normalizedKey !== "meta" && "Meta"
   ].filter(Boolean).join(" + ");
   const label = modKeys ? `${modKeys} + ${keyLabel}` : keyLabel;
