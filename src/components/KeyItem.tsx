@@ -8,17 +8,27 @@ interface Props {
 
 export const KeyItem: React.FC<Props> = ({ keyData, style = {} }) => {
   const { key, modifiers } = keyData;
+  const normalizedKey = key.toLowerCase();
+  const keyLabels: Record<string, string> = {
+    shift: 'Shift',
+    control: 'Ctrl',
+    ctrl: 'Ctrl',
+    alt: 'Alt',
+    meta: 'Meta',
+    ' ': 'Space',
+  };
+  const keyLabel = keyLabels[normalizedKey] ?? key;
 
   const modKeys = [
-    modifiers.ctrl && 'Ctrl',
-    modifiers.alt && 'Alt',
-    modifiers.shift && 'Shift',
-    modifiers.meta && 'Meta',
+    modifiers.ctrl && normalizedKey !== 'control' && 'Ctrl',
+    modifiers.alt && normalizedKey !== 'alt' && 'Alt',
+    modifiers.shift && normalizedKey !== 'shift' && 'Shift',
+    modifiers.meta && normalizedKey !== 'meta' && 'Meta',
   ]
     .filter(Boolean)
     .join(' + ');
 
-  const label = modKeys ? `${modKeys} + ${key}` : key;
+  const label = modKeys ? `${modKeys} + ${keyLabel}` : keyLabel;
 
   return <div className="key-item" style={style}>{label}</div>;
 };

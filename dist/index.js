@@ -25,10 +25,19 @@ var DEFAULT_MAX_ITEMS = 10;
 function useKeyPresses(options = {}) {
   const { timeout = DEFAULT_TIMEOUT, maxItems = DEFAULT_MAX_ITEMS } = options;
   const [pressedKeys, setPressedKeys] = react.useState([]);
+  const heldKeys = react.useRef(/* @__PURE__ */ new Set());
+  const getKeyId = (event) => {
+    const key = event.key.toLowerCase();
+    const isModifier = ["shift", "control", "alt", "meta"].includes(key);
+    return isModifier ? key : event.code || key;
+  };
   const generateId = () => {
     return typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
   };
   useHotkeysTs.useHotkeys("*", (e) => {
+    const keyId = getKeyId(e);
+    if (heldKeys.current.has(keyId)) return;
+    heldKeys.current.add(keyId);
     const newKey = {
       key: e.key,
       modifiers: {
@@ -46,24 +55,46 @@ function useKeyPresses(options = {}) {
     });
   });
   react.useEffect(() => {
+    const handleKeyUp = (event) => {
+      heldKeys.current.delete(getKeyId(event));
+    };
+    const clearHeldKeys = () => heldKeys.current.clear();
+    document.addEventListener("keyup", handleKeyUp);
+    window.addEventListener("blur", clearHeldKeys);
     const interval = setInterval(() => {
       setPressedKeys(
         (keys) => keys.filter((k) => Date.now() - k.timestamp < timeout)
       );
     }, 200);
-    return () => clearInterval(interval);
+    return () => {
+      document.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("blur", clearHeldKeys);
+      clearInterval(interval);
+      heldKeys.current.clear();
+    };
   }, [timeout]);
   return pressedKeys;
 }
 var KeyItem = ({ keyData, style = {} }) => {
+  var _a;
   const { key, modifiers } = keyData;
+  const normalizedKey = key.toLowerCase();
+  const keyLabels = {
+    shift: "Shift",
+    control: "Ctrl",
+    ctrl: "Ctrl",
+    alt: "Alt",
+    meta: "Meta",
+    " ": "Space"
+  };
+  const keyLabel = (_a = keyLabels[normalizedKey]) != null ? _a : key;
   const modKeys = [
-    modifiers.ctrl && "Ctrl",
-    modifiers.alt && "Alt",
-    modifiers.shift && "Shift",
-    modifiers.meta && "Meta"
+    modifiers.ctrl && normalizedKey !== "control" && "Ctrl",
+    modifiers.alt && normalizedKey !== "alt" && "Alt",
+    modifiers.shift && normalizedKey !== "shift" && "Shift",
+    modifiers.meta && normalizedKey !== "meta" && "Meta"
   ].filter(Boolean).join(" + ");
-  const label = modKeys ? `${modKeys} + ${key}` : key;
+  const label = modKeys ? `${modKeys} + ${keyLabel}` : keyLabel;
   return /* @__PURE__ */ jsxRuntime.jsx("div", { className: "key-item", style, children: label });
 };
 var KeyOverlay = ({

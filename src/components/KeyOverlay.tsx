@@ -1,6 +1,7 @@
 import React, { CSSProperties } from 'react';
 import { useKeyPresses } from '../hooks/useKeyPresses';
 import { KeyItem } from './KeyItem';
+// @ts-ignore CSS side-effect imports are handled by the bundler.
 import '../styles/keyOverlay.css';
 import { KeyOverlayProps } from '../types';
 
