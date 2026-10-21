@@ -10,6 +10,7 @@ describe('useKeyPresses', () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.clearAllTimers();
+    vi.useRealTimers();
   });
 
   it('initializes with empty array', () => {
@@ -142,5 +143,47 @@ describe('useKeyPresses', () => {
 
     expect(result.current.length).toBe(1);
     expect(result.current[0].key).toBe('Enter');
+  });
+
+  it('ignores repeated keydown events until the key is released', () => {
+    const { result } = renderHook(() => useKeyPresses());
+
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', code: 'KeyA' }));
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', code: 'KeyA', repeat: true }));
+    });
+
+    expect(result.current).toHaveLength(1);
+
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent('keyup', { key: 'a', code: 'KeyA' }));
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', code: 'KeyA' }));
+    });
+
+    expect(result.current).toHaveLength(2);
+  });
+
+  it('treats left and right versions of the same modifier as one held key', () => {
+    const { result } = renderHook(() => useKeyPresses());
+
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Shift', code: 'ShiftLeft', shiftKey: true }));
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Shift', code: 'ShiftRight', shiftKey: true, repeat: true }));
+    });
+
+    expect(result.current).toHaveLength(1);
+    expect(result.current[0].key).toBe('Shift');
+  });
+
+  it('clears held keys when the window loses focus', () => {
+    const { result } = renderHook(() => useKeyPresses());
+
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', code: 'KeyA' }));
+      window.dispatchEvent(new Event('blur'));
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', code: 'KeyA' }));
+    });
+
+    expect(result.current).toHaveLength(2);
   });
 });

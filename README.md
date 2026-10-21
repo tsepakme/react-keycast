@@ -23,6 +23,10 @@ export function Demo() {
 
 The overlay listens for key presses outside form controls and editable content. The underlying `use-hotkeys-ts` package provides the global keyboard listener.
 
+## Demo
+
+[Try the interactive demo in CodeSandbox](https://codesandbox.io/p/devbox/trusting-moore-9jyhqx).
+
 ## Props
 
 | Prop | Default | Description |
