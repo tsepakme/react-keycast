@@ -2,6 +2,11 @@
 
 Notable changes to `react-keycast` are recorded here.
 
+## [1.0.11] - 2026-10-22
+
+- Show modifier keys as a standalone entry only when released without forming a chord.
+- Prevent a modifier key from appearing separately before its shortcut entry.
+
 ## [1.0.10] - 2026-10-21
 
 ### Tests
