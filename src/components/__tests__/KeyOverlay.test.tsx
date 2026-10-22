@@ -58,6 +58,23 @@ describe('KeyOverlay', () => {
     expect(item.style.animationDuration).toBe('2400ms');
   });
 
+  it('shows a modifier chord once instead of showing the modifier first', () => {
+    render(<KeyOverlay />);
+    fireEvent.keyDown(document, { key: 'Shift', code: 'ShiftLeft', shiftKey: true });
+
+    expect(screen.queryByText('Shift')).not.toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: 'a', code: 'KeyA', shiftKey: true });
+
+    expect(screen.getByText('Shift + a')).toBeInTheDocument();
+    expect(screen.queryByText('Shift')).not.toBeInTheDocument();
+
+    fireEvent.keyUp(document, { key: 'a', code: 'KeyA' });
+    fireEvent.keyUp(document, { key: 'Shift', code: 'ShiftLeft' });
+
+    expect(screen.getAllByText('Shift + a')).toHaveLength(1);
+  });
+
   it('filters keys using filterKeys', () => {
     render(<KeyOverlay filterKeys={(key) => key !== 'x'} />);
     pressKey('x', 'KeyX');
