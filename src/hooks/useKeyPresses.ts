@@ -4,6 +4,12 @@ import { PressedKey } from "../types";
 
 const DEFAULT_TIMEOUT = 1500;
 const DEFAULT_MAX_ITEMS = 10;
+type KeyModifiers = PressedKey["modifiers"];
+
+interface PendingModifierKey {
+  key: string;
+  modifiers: KeyModifiers;
+}
 
 interface KeyPressesOptions {
   timeout?: number;
@@ -15,6 +21,9 @@ export function useKeyPresses(options: KeyPressesOptions = {}) {
 
   const [pressedKeys, setPressedKeys] = useState<PressedKey[]>([]);
   const heldKeys = useRef(new Set<string>());
+  const pendingModifierKeys = useRef(new Map<string, PendingModifierKey>());
+  const maxItemsRef = useRef(maxItems);
+  maxItemsRef.current = maxItems;
 
   const getKeyId = (event: KeyboardEvent) => {
     const key = event.key.toLowerCase();
@@ -22,6 +31,41 @@ export function useKeyPresses(options: KeyPressesOptions = {}) {
 
     // Use the logical name for modifiers so left/right variants count as one key.
     return isModifier ? key : event.code || key;
+  };
+
+  const getModifiers = (event: KeyboardEvent): KeyModifiers => ({
+    shift: event.shiftKey,
+    ctrl: event.ctrlKey,
+    alt: event.altKey,
+    meta: event.metaKey,
+  });
+
+  const getModifierId = (key: string) => {
+    switch (key.toLowerCase()) {
+      case "shift":
+      case "control":
+      case "alt":
+      case "meta":
+        return key.toLowerCase();
+      default:
+        return undefined;
+    }
+  };
+
+  const addPressedKey = (key: string, modifiers: KeyModifiers) => {
+    const newKey: PressedKey = {
+      key,
+      modifiers,
+      timestamp: Date.now(),
+      id: generateId(),
+    };
+
+    setPressedKeys((prev) => {
+      const updatedKeys = [...prev, newKey];
+      return updatedKeys.slice(
+        Math.max(0, updatedKeys.length - maxItemsRef.current)
+      );
+    });
   };
 
   const generateId = () => {
@@ -35,29 +79,34 @@ export function useKeyPresses(options: KeyPressesOptions = {}) {
     if (heldKeys.current.has(keyId)) return;
     heldKeys.current.add(keyId);
 
-    const newKey: PressedKey = {
-      key: e.key,
-      modifiers: {
-        shift: e.shiftKey,
-        ctrl: e.ctrlKey,
-        alt: e.altKey,
-        meta: e.metaKey,
-      },
-      timestamp: Date.now(),
-      id: generateId(),
-    };
+    if (getModifierId(e.key)) {
+      pendingModifierKeys.current.set(keyId, {
+        key: e.key,
+        modifiers: getModifiers(e),
+      });
+      return;
+    }
 
-    setPressedKeys((prev) => {
-      const updatedKeys = [...prev, newKey];
-      return updatedKeys.slice(Math.max(0, updatedKeys.length - maxItems));
-    });
+    // A pending modifier is part of this chord, so don't also show it on release.
+    pendingModifierKeys.current.clear();
+    addPressedKey(e.key, getModifiers(e));
   });
 
   useEffect(() => {
     const handleKeyUp = (event: KeyboardEvent) => {
-      heldKeys.current.delete(getKeyId(event));
+      const keyId = getKeyId(event);
+      heldKeys.current.delete(keyId);
+
+      const pendingModifier = pendingModifierKeys.current.get(keyId);
+      if (pendingModifier) {
+        pendingModifierKeys.current.delete(keyId);
+        addPressedKey(pendingModifier.key, pendingModifier.modifiers);
+      }
     };
-    const clearHeldKeys = () => heldKeys.current.clear();
+    const clearHeldKeys = () => {
+      heldKeys.current.clear();
+      pendingModifierKeys.current.clear();
+    };
 
     document.addEventListener("keyup", handleKeyUp);
     window.addEventListener("blur", clearHeldKeys);
@@ -73,6 +122,7 @@ export function useKeyPresses(options: KeyPressesOptions = {}) {
       window.removeEventListener("blur", clearHeldKeys);
       clearInterval(interval);
       heldKeys.current.clear();
+      pendingModifierKeys.current.clear();
     };
   }, [timeout]);
 

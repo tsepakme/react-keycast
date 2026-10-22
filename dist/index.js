@@ -26,10 +26,44 @@ function useKeyPresses(options = {}) {
   const { timeout = DEFAULT_TIMEOUT, maxItems = DEFAULT_MAX_ITEMS } = options;
   const [pressedKeys, setPressedKeys] = react.useState([]);
   const heldKeys = react.useRef(/* @__PURE__ */ new Set());
+  const pendingModifierKeys = react.useRef(/* @__PURE__ */ new Map());
+  const maxItemsRef = react.useRef(maxItems);
+  maxItemsRef.current = maxItems;
   const getKeyId = (event) => {
     const key = event.key.toLowerCase();
     const isModifier = ["shift", "control", "alt", "meta"].includes(key);
     return isModifier ? key : event.code || key;
+  };
+  const getModifiers = (event) => ({
+    shift: event.shiftKey,
+    ctrl: event.ctrlKey,
+    alt: event.altKey,
+    meta: event.metaKey
+  });
+  const getModifierId = (key) => {
+    switch (key.toLowerCase()) {
+      case "shift":
+      case "control":
+      case "alt":
+      case "meta":
+        return key.toLowerCase();
+      default:
+        return void 0;
+    }
+  };
+  const addPressedKey = (key, modifiers) => {
+    const newKey = {
+      key,
+      modifiers,
+      timestamp: Date.now(),
+      id: generateId()
+    };
+    setPressedKeys((prev) => {
+      const updatedKeys = [...prev, newKey];
+      return updatedKeys.slice(
+        Math.max(0, updatedKeys.length - maxItemsRef.current)
+      );
+    });
   };
   const generateId = () => {
     return typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
@@ -38,27 +72,30 @@ function useKeyPresses(options = {}) {
     const keyId = getKeyId(e);
     if (heldKeys.current.has(keyId)) return;
     heldKeys.current.add(keyId);
-    const newKey = {
-      key: e.key,
-      modifiers: {
-        shift: e.shiftKey,
-        ctrl: e.ctrlKey,
-        alt: e.altKey,
-        meta: e.metaKey
-      },
-      timestamp: Date.now(),
-      id: generateId()
-    };
-    setPressedKeys((prev) => {
-      const updatedKeys = [...prev, newKey];
-      return updatedKeys.slice(Math.max(0, updatedKeys.length - maxItems));
-    });
+    if (getModifierId(e.key)) {
+      pendingModifierKeys.current.set(keyId, {
+        key: e.key,
+        modifiers: getModifiers(e)
+      });
+      return;
+    }
+    pendingModifierKeys.current.clear();
+    addPressedKey(e.key, getModifiers(e));
   });
   react.useEffect(() => {
     const handleKeyUp = (event) => {
-      heldKeys.current.delete(getKeyId(event));
+      const keyId = getKeyId(event);
+      heldKeys.current.delete(keyId);
+      const pendingModifier = pendingModifierKeys.current.get(keyId);
+      if (pendingModifier) {
+        pendingModifierKeys.current.delete(keyId);
+        addPressedKey(pendingModifier.key, pendingModifier.modifiers);
+      }
     };
-    const clearHeldKeys = () => heldKeys.current.clear();
+    const clearHeldKeys = () => {
+      heldKeys.current.clear();
+      pendingModifierKeys.current.clear();
+    };
     document.addEventListener("keyup", handleKeyUp);
     window.addEventListener("blur", clearHeldKeys);
     const interval = setInterval(() => {
@@ -71,6 +108,7 @@ function useKeyPresses(options = {}) {
       window.removeEventListener("blur", clearHeldKeys);
       clearInterval(interval);
       heldKeys.current.clear();
+      pendingModifierKeys.current.clear();
     };
   }, [timeout]);
   return pressedKeys;
