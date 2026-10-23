@@ -20,6 +20,10 @@ export const KeyOverlay: React.FC<KeyOverlayProps> = ({
   });
 
   const filteredKeys = keys.filter(k => filterKeys(k.key));
+
+  if (filteredKeys.length === 0) {
+    return null;
+  }
   
   const positionStyles: Record<string, CSSProperties> = {
     'top-left': { top: 16, left: 16, bottom: 'auto', right: 'auto' },

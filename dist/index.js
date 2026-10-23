@@ -150,6 +150,9 @@ var KeyOverlay = ({
     maxItems: maxKeys
   });
   const filteredKeys = keys.filter((k) => filterKeys(k.key));
+  if (filteredKeys.length === 0) {
+    return null;
+  }
   const positionStyles = {
     "top-left": { top: 16, left: 16, bottom: "auto", right: "auto" },
     "top-right": { top: 16, right: 16, bottom: "auto", left: "auto" },

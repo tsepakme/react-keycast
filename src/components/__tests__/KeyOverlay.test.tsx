@@ -18,12 +18,10 @@ describe('KeyOverlay', () => {
     vi.useRealTimers();
   });
 
-  it('renders an empty overlay with its default position', () => {
+  it('does not render an empty container while idle', () => {
     const { container } = render(<KeyOverlay />);
-    const overlay = container.querySelector('.key-overlay');
 
-    expect(overlay).toBeInTheDocument();
-    expect(overlay).toHaveStyle({ position: 'fixed', bottom: '16px', right: '16px' });
+    expect(container.querySelector('.key-overlay')).not.toBeInTheDocument();
   });
 
   it.each([
@@ -34,6 +32,7 @@ describe('KeyOverlay', () => {
     ['center', { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }],
   ])('supports the %s position', (position, expectedStyles) => {
     const { container } = render(<KeyOverlay position={position as 'top-left'} />);
+    pressKey('a', 'KeyA');
 
     expect(container.querySelector('.key-overlay')).toHaveStyle(expectedStyles as Record<string, string>);
   });
@@ -42,6 +41,7 @@ describe('KeyOverlay', () => {
     const { container } = render(
       <KeyOverlay className="custom-overlay" style={{ bottom: 40, right: 32, opacity: 0.5 }} />
     );
+    pressKey('a', 'KeyA');
     const overlay = container.querySelector('.key-overlay');
 
     expect(overlay).toHaveClass('key-overlay', 'custom-overlay');

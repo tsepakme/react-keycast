@@ -2,6 +2,10 @@
 
 Notable changes to `react-keycast` are recorded here.
 
+## [1.0.12] - 2026-10-22
+
+- Hide the overlay container when there are no keys to display.
+
 ## [1.0.11] - 2026-10-22
 
 - Show modifier keys as a standalone entry only when released without forming a chord.
