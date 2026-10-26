@@ -18,6 +18,22 @@ describe('useKeyPresses', () => {
     expect(result.current).toEqual([]);
   });
 
+  it('does not rerender when the idle timeout sweep removes nothing', () => {
+    const renderSpy = vi.fn();
+    const { result } = renderHook(() => {
+      renderSpy();
+      return useKeyPresses();
+    });
+    const initialKeys = result.current;
+
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+
+    expect(result.current).toBe(initialKeys);
+    expect(renderSpy).toHaveBeenCalledTimes(1);
+  });
+
   it('adds a key press to the array', () => {
     const { result } = renderHook(() => useKeyPresses());
 

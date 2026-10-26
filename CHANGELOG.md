@@ -2,9 +2,11 @@
 
 Notable changes to `react-keycast` are recorded here.
 
-## [1.0.12] - 2026-10-22
+## [1.0.12] - 2026-10-26
 
 - Hide the overlay container when there are no keys to display.
+- Avoid rerendering the HUD when the key cleanup interval removes no entries.
+- Add the V8 coverage provider and enable the `test:coverage` script.
 
 ## [1.0.11] - 2026-10-22
 
