@@ -112,9 +112,10 @@ export function useKeyPresses(options: KeyPressesOptions = {}) {
     window.addEventListener("blur", clearHeldKeys);
 
     const interval = setInterval(() => {
-      setPressedKeys((keys) =>
-        keys.filter((k) => Date.now() - k.timestamp < timeout)
-      );
+      setPressedKeys((keys) => {
+        const activeKeys = keys.filter((key) => Date.now() - key.timestamp < timeout);
+        return activeKeys.length === keys.length ? keys : activeKeys;
+      });
     }, 200);
 
     return () => {
