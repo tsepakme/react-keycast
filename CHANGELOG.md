@@ -2,7 +2,7 @@
 
 Notable changes to `react-keycast` are recorded here.
 
-## [1.0.14] - 2026-10-26
+## [1.0.14] - 2026-10-27
 
 - Validate `timeout` and `maxKeys` at runtime and reject invalid numeric literals in TypeScript.
 - Update the lockfile to `use-hotkeys-ts@1.2.3`; its stricter shortcut validation preserves the `*` wildcard used by the HUD.
