@@ -2,11 +2,19 @@
 
 Notable changes to `react-keycast` are recorded here.
 
-## [1.0.12] - 2026-10-26
+## [Unreleased]
 
-- Hide the overlay container when there are no keys to display.
+- Validate `timeout` and `maxKeys` at runtime and reject invalid numeric literals in TypeScript.
+- Update the lockfile to `use-hotkeys-ts@1.2.3`; its stricter shortcut validation preserves the `*` wildcard used by the HUD.
+
+## [1.0.13] - 2026-10-26
+
 - Avoid rerendering the HUD when the key cleanup interval removes no entries.
 - Add the V8 coverage provider and enable the `test:coverage` script.
+
+## [1.0.12] - 2026-10-22
+
+- Hide the overlay container when there are no keys to display.
 
 ## [1.0.11] - 2026-10-22
 

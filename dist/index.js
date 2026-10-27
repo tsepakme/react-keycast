@@ -137,7 +137,7 @@ var KeyItem = ({ keyData, style = {} }) => {
   const label = modKeys ? `${modKeys} + ${keyLabel}` : keyLabel;
   return /* @__PURE__ */ jsxRuntime.jsx("div", { className: "key-item", style, children: label });
 };
-var KeyOverlay = ({
+function KeyOverlay({
   position = "bottom-right",
   style = {},
   keyStyle = {},
@@ -145,10 +145,18 @@ var KeyOverlay = ({
   timeout = 1500,
   filterKeys = () => true,
   className = ""
-}) => {
+}) {
+  const resolvedTimeout = timeout != null ? timeout : 1500;
+  const resolvedMaxKeys = maxKeys != null ? maxKeys : 5;
+  if (!Number.isFinite(resolvedTimeout) || resolvedTimeout <= 0) {
+    throw new RangeError("KeyOverlay: timeout must be a finite number greater than 0.");
+  }
+  if (!Number.isSafeInteger(resolvedMaxKeys) || resolvedMaxKeys <= 0) {
+    throw new RangeError("KeyOverlay: maxKeys must be a positive safe integer.");
+  }
   const keys = useKeyPresses({
-    timeout,
-    maxItems: maxKeys
+    timeout: resolvedTimeout,
+    maxItems: resolvedMaxKeys
   });
   const filteredKeys = keys.filter((k) => filterKeys(k.key));
   if (filteredKeys.length === 0) {
@@ -170,12 +178,12 @@ var KeyOverlay = ({
         KeyItem,
         {
           keyData,
-          style: __spreadValues({ animationDuration: `${timeout}ms` }, keyStyle)
+          style: __spreadValues({ animationDuration: `${resolvedTimeout}ms` }, keyStyle)
         },
         keyData.id
       ))
     }
   );
-};
+}
 
 exports.KeyOverlay = KeyOverlay;
