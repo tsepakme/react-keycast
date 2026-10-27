@@ -5,18 +5,29 @@ import { KeyItem } from './KeyItem';
 import '../styles/keyOverlay.css';
 import { KeyOverlayProps } from '../types';
 
-export const KeyOverlay: React.FC<KeyOverlayProps> = ({
+export function KeyOverlay<TTimeout extends number = number, TMaxKeys extends number = number>({
   position = 'bottom-right',
   style = {},
   keyStyle = {},
-  maxKeys = 5,
-  timeout = 1500,
+  maxKeys = 5 as KeyOverlayProps<TTimeout, TMaxKeys>['maxKeys'],
+  timeout = 1500 as KeyOverlayProps<TTimeout, TMaxKeys>['timeout'],
   filterKeys = () => true,
   className = '',
-}) => {
+}: KeyOverlayProps<TTimeout, TMaxKeys>) {
+  const resolvedTimeout = timeout ?? 1500;
+  const resolvedMaxKeys = maxKeys ?? 5;
+
+  if (!Number.isFinite(resolvedTimeout) || resolvedTimeout <= 0) {
+    throw new RangeError('KeyOverlay: timeout must be a finite number greater than 0.');
+  }
+
+  if (!Number.isSafeInteger(resolvedMaxKeys) || resolvedMaxKeys <= 0) {
+    throw new RangeError('KeyOverlay: maxKeys must be a positive safe integer.');
+  }
+
   const keys = useKeyPresses({
-    timeout,
-    maxItems: maxKeys,
+    timeout: resolvedTimeout,
+    maxItems: resolvedMaxKeys,
   });
 
   const filteredKeys = keys.filter(k => filterKeys(k.key));
@@ -42,9 +53,9 @@ export const KeyOverlay: React.FC<KeyOverlayProps> = ({
         <KeyItem
           key={keyData.id}
           keyData={keyData}
-          style={{ animationDuration: `${timeout}ms`, ...keyStyle }}
+          style={{ animationDuration: `${resolvedTimeout}ms`, ...keyStyle }}
         />
       ))}
     </div>
   );
-};
+}
